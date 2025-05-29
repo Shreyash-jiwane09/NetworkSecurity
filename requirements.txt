@@ -1,0 +1,14 @@
+python-dotenv
+pandas 
+numpy
+pymongo
+certifi
+scikit-learn
+dill
+pyyaml
+mlflow
+dagshub
+fastapi
+uvicorn
+python-multipart
+## -e . 
