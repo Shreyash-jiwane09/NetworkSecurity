@@ -181,4 +181,6 @@ venv/
 __pycache__/
 *.py[cod]
 
-main_t.py/
+main_t.py
+
+prediction_output/
