@@ -85,12 +85,17 @@ jobs:
         run: |
          docker pull ${{secrets.AWS_ECR_LOGIN_URI}}/${{ secrets.ECR_REPOSITORY_NAME }}:latest
          
-      - name: Stop and remove container if running
+      - name: Stop and remove container if it exists
         run: |
-          docker ps -q --filter "name=networksecurity" | grep -q . && \
-          docker stop networksecurity && \
-          docker rm -fv networksecurity || \
-          echo "No running container named 'networksecurity' found."
+          CONTAINER_ID=$(docker ps -aqf "name=networksecurity")
+          if [ -n "$CONTAINER_ID" ]; then
+          echo "Stopping and removing existing container..."
+          docker stop "$CONTAINER_ID" || true
+          docker rm -fv "$CONTAINER_ID" || true
+          else
+          echo "No existing container named 'networksecurity'."
+          fi
+
 
        
       - name: Run Docker Image to serve users
