@@ -28,7 +28,6 @@ from sklearn.ensemble import (
 # Load environment variables from .env file
 load_dotenv()
 
-
 # Initialize dagshub (credentials must be in env vars)
 dagshub.init(repo_owner='shrey.jiwane09', repo_name='NetworkSecurity', mlflow=True)
 
@@ -89,11 +88,16 @@ class ModelTrainer:
             }
         }
 
+        # Evaluate models and get performance report
         model_report = evaluate_models(X_train, y_train, X_test, y_test, models, params)
 
+        # Select best model based on highest score
         best_model_name, best_model_score = max(model_report.items(), key=lambda x: x[1])
         best_model = models[best_model_name]
         logging.info(f"Best model: {best_model_name} with score: {best_model_score}")
+
+        # Fit the best model before predictions
+        best_model.fit(X_train, y_train)
 
         # Training metrics
         y_train_pred = best_model.predict(X_train)
@@ -105,7 +109,7 @@ class ModelTrainer:
         classification_test_metric = get_classification_score(y_true=y_test, y_pred=y_test_pred)
         self.track_mlflow(best_model, classification_test_metric, run_name="Test Run", run_type="Test", log_model=True)
 
-        # Save the final model
+        # Save the final model with preprocessor
         preprocessor = load_object(self.data_transformation_artifact.transformed_object_file_path)
         final_model = NetworkModel(preprocessor=preprocessor, model=best_model)
         
