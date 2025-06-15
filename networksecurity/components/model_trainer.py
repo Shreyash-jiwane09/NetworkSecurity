@@ -29,7 +29,7 @@ from sklearn.ensemble import (
 load_dotenv()
 
 # Initialize dagshub (credentials must be in env vars)
-dagshub.init(repo_owner='shrey.jiwane09', repo_name='NetworkSecurity', mlflow=True)
+dagshub.init(repo_owner='shrey.jiwane09', repo_name='NetworkSecurity', mlflow=True,token=os.getenv("DAGSHUB_TOKEN"))
 
 # Set MLflow URI and experiment
 mlflow.set_tracking_uri(os.getenv("MLFLOW_TRACKING_URI"))
